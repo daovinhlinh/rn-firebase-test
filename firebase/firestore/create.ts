@@ -7,6 +7,7 @@ import {
 
 interface PostItemInterface {
   post: string;
+  image?: string;
 }
 
 const postsCollection = collection(db, 'posts');

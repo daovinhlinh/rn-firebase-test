@@ -1,4 +1,4 @@
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Image, StyleSheet, Text, useColorScheme, View } from "react-native";
 import React from "react";
 import { fontSize, heightScale } from "@/styles";
 import { Colors } from "@/constants/Colors";
@@ -8,9 +8,10 @@ export interface IPostCard {
   post: string;
   email: string;
   time: number;
+  image?: string;
 }
 
-const PostCard = ({ post, email, time }: IPostCard) => {
+const PostCard = ({ post, email, time, image }: IPostCard) => {
   const theme = useColorScheme() ?? "light";
 
   return (
@@ -25,6 +26,7 @@ const PostCard = ({ post, email, time }: IPostCard) => {
       <Text style={[styles.text, styles.mb23]}>Post: {post}</Text>
       <Text style={styles.text}>Email: {email}</Text>
       <Text style={styles.text}>Time posted: {formatTimestamp(time)}</Text>
+      {image && <Image style={styles.image} source={{ uri: image }} />}
     </View>
   );
 };
@@ -43,5 +45,11 @@ const styles = StyleSheet.create({
   },
   mb23: {
     marginBottom: heightScale(23),
+  },
+  image: {
+    width: heightScale(100),
+    height: heightScale(100),
+    alignSelf: "center",
+    marginTop: heightScale(10),
   },
 });

@@ -1,4 +1,11 @@
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 
 import GradientButton from "@/components/GradientButton";
 import MTextInput from "@/components/MTextInput";
@@ -13,6 +20,8 @@ import { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { useSession } from "@/app/ctx";
+import * as ImagePicker from "expo-image-picker";
+import { uploadImageToFirebase } from "@/firebase/firestore/upload";
 
 export default function HomeScreen() {
   const { signOut } = useSession();
@@ -20,6 +29,26 @@ export default function HomeScreen() {
   const [post, setPost] = useState<IPostCard>();
   const [loading, setLoading] = useState(false);
   const [postMessage, setPostMessage] = useState("");
+
+  const [photos, setPhotos] = useState<Record<string, string>>({});
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      allowsMultipleSelection: false,
+    });
+
+    if (!result.canceled) {
+      setPhotos({
+        name: result.assets[0].fileName ?? "",
+        uri: result.assets[0].uri ?? "",
+      });
+    }
+  };
 
   const getPost = async () => {
     // fetch post
@@ -33,30 +62,58 @@ export default function HomeScreen() {
         post: data.post,
         time: data.createdAt.seconds * 1000,
         email: data.email,
+        image: data.image,
       });
     }
   };
 
   const newPost = async () => {
     // fetch post
-    if (postMessage === "") {
-      alert("Please enter a post message");
-      return;
-    }
-    setLoading(true);
-    const res = await createPost({
-      post: postMessage,
-    });
+    try {
+      if (postMessage === "") {
+        alert("Please enter a post message");
+        return;
+      }
+      setLoading(true);
+      if (photos.uri) {
+        const url = await uploadImageToFirebase(photos.uri, photos.name);
 
-    if (res != null) {
-      setPost({
-        post: postMessage,
-        time: Date.now(),
-        email: auth.currentUser?.email ?? "",
-      });
+        if (url) {
+          const res = await createPost({
+            post: postMessage,
+            image: url,
+          });
+
+          if (res != null) {
+            setPost({
+              post: postMessage,
+              time: Date.now(),
+              email: auth.currentUser?.email ?? "",
+              image: url,
+            });
+          }
+        }
+      } else {
+        const res = await createPost({
+          post: postMessage,
+        });
+
+        if (res != null) {
+          setPost({
+            post: postMessage,
+            time: Date.now(),
+            email: auth.currentUser?.email ?? "",
+          });
+        }
+      }
+      setPhotos({});
+      setPostMessage("");
+      setLoading(false);
+    } catch (error) {
+      console.log("error", error);
+
+      setLoading(false);
     }
-    setPostMessage("");
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -75,7 +132,7 @@ export default function HomeScreen() {
       ]}
     >
       <LoadingIndicator loading={loading} />
-      <View>
+      <ScrollView>
         <View
           style={[
             styles.postList,
@@ -90,7 +147,12 @@ export default function HomeScreen() {
             Newest Post
           </Text>
           {post != null ? (
-            <PostCard post={post.post} email={post.email} time={post.time} />
+            <PostCard
+              post={post.post}
+              email={post.email}
+              time={post.time}
+              image={post.image}
+            />
           ) : (
             <View style={layoutStyles.center}>
               <Text>No post</Text>
@@ -104,6 +166,23 @@ export default function HomeScreen() {
           style={styles.textInput}
           onChangeText={setPostMessage}
           value={postMessage}
+        />
+        {photos.uri && (
+          <View style={layoutStyles.center}>
+            <Text>{photos.name}</Text>
+            <Image
+              source={{ uri: photos.uri }}
+              style={{ width: 100, height: 100 }}
+              resizeMode="cover"
+            />
+          </View>
+        )}
+        <GradientButton
+          text="Add Image"
+          onPress={pickImage}
+          colors={Gradients[colorScheme].button}
+          style={[styles.button, styles.mt10]}
+          textStyle={styles.buttonText}
         />
         <GradientButton
           text="Post"
@@ -119,7 +198,7 @@ export default function HomeScreen() {
           style={[styles.button, styles.mt10]}
           textStyle={styles.buttonText}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
