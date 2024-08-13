@@ -44,3 +44,8 @@ Once you have setup completed, you can follow these steps to run the project:
    And then press I to run the app on an iOS simulator or A to run the app on an Android emulator.
 
 Please note that you need to have an emulator running, or a device connected, to run the app.
+
+##Showcase
+<video src="https://github.com/user-attachments/assets/a6ac0dc1-c626-44f5-8169-b726c3442462" width="100%" height="400" controls>
+          Your browser does not support the video tag.
+        </video>
