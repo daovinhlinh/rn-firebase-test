@@ -1,50 +1,46 @@
-# Welcome to your Expo app 👋
+# App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a React native app using Expo CLI and Firebase
 
-## Get started
+## Features
 
-1. Install dependencies
+- Sign in/ Register
+- See latest post
+- Add post
+- Upload image
+
+## Getting Started
+
+To run this project, you need to have React Native environment installed on your machine. If you haven't installed them yet, you can follow the instructions on the [React native website](https://reactnative.dev/docs/environment-setup).
+
+Once you have setup completed, you can follow these steps to run the project:
+
+1. **Clone the repository**: First, you need to clone this repository to your local machine. You can do this by running the following command in your terminal:
 
    ```bash
-   npm install
+   git clone https://github.com/daovinhlinh/rn-firebase-test.git
    ```
 
-2. Start the app
+2. **Navigate to the project directory**: Use the cd command to navigate to the project directory:
 
    ```bash
-    npx expo start
+   cd rn-firebase-test
    ```
 
-In the output, you'll find options to open the app in a
+3. Add .env file to root folder
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+4. **Get packages**: Run the following command to fetch the necessary packages:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   ```bash
+   npx expo install
+   ```
 
-## Get a fresh project
+5. **Run the app**: Finally, you can run the app by executing the following command:
 
-When you're ready, run:
+   ```bash
+   npx expo start
+   ```
 
-```bash
-npm run reset-project
-```
+   And then press I to run the app on an iOS simulator or A to run the app on an Android emulator.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Please note that you need to have an emulator running, or a device connected, to run the app.
